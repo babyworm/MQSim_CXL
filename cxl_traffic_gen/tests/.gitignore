@@ -1,0 +1,18 @@
+# Compiled test binaries
+test_cxl_traffic_patterns
+test_address
+test_debug
+test_struct_layout
+test_cxlflit_layout
+
+# Test output files (but keep sample output and CMakeLists)
+test_output*.txt
+*.log
+
+# Object files
+*.o
+*.obj
+
+# Core dumps
+core
+core.*
