@@ -6,7 +6,7 @@ CXXFLAGS := -std=c++14 -Wall -Wextra -O2 -g
 INCLUDES := -I../include
 
 # Targets
-TARGETS := test_cxl_traffic_patterns
+TARGETS := test_cxl_traffic_patterns cxl_flit_generator
 
 all: $(TARGETS)
 
@@ -15,6 +15,12 @@ test_cxl_traffic_patterns: test_cxl_traffic_patterns.cpp ../include/cxl_flit.h
 	@echo ""
 	@echo "✅ Built: $@"
 	@echo "Run with: ./$@"
+
+cxl_flit_generator: cxl_flit_generator.cpp ../include/cxl_flit.h
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $<
+	@echo ""
+	@echo "✅ Built: $@"
+	@echo "Run with: ./$@ [flit_type]"
 
 clean:
 	rm -f $(TARGETS)

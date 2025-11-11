@@ -1,5 +1,6 @@
 # Compiled test binaries
 test_cxl_traffic_patterns
+cxl_flit_generator
 test_address
 test_debug
 test_struct_layout
@@ -8,6 +9,9 @@ test_cxlflit_layout
 # Test output files (but keep sample output and CMakeLists)
 test_output*.txt
 *.log
+
+# Generated flit dumps
+flit_dumps/
 
 # Object files
 *.o

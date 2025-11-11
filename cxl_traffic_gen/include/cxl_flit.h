@@ -147,6 +147,108 @@ struct CXLFlit {
         return flit;
     }
 
+    static CXLFlit create_mem_read_data(uint64_t address, const void* read_data,
+                                        uint16_t size, uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x2;
+        flit.header.opcode = CXLMemOpcode::MEM_RD_DATA;
+        flit.header.address = address;
+        flit.header.length = size;
+        flit.header.tag = tag;
+
+        size_t copy_size = (size > DATA_SIZE) ? DATA_SIZE : size;
+        if (read_data) {
+            memcpy(flit.data, read_data, copy_size);
+        }
+        return flit;
+    }
+
+    static CXLFlit create_mem_write_partial(uint64_t address, const void* write_data,
+                                            uint16_t size, uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x2;
+        flit.header.opcode = CXLMemOpcode::MEM_WR_PTL;
+        flit.header.address = address;
+        flit.header.length = size;
+        flit.header.tag = tag;
+
+        size_t copy_size = (size > DATA_SIZE) ? DATA_SIZE : size;
+        if (write_data) {
+            memcpy(flit.data, write_data, copy_size);
+        }
+        return flit;
+    }
+
+    static CXLFlit create_mem_data_nxm(uint64_t address, uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x2;
+        flit.header.opcode = CXLMemOpcode::MEM_DATA_NXM;
+        flit.header.address = address;
+        flit.header.tag = tag;
+        return flit;
+    }
+
+    static CXLFlit create_completion_with_data(const void* cpl_data, uint16_t size,
+                                                uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x2;
+        flit.header.opcode = CXLMemOpcode::CPL_DATA;
+        flit.header.length = size;
+        flit.header.tag = tag;
+
+        size_t copy_size = (size > DATA_SIZE) ? DATA_SIZE : size;
+        if (cpl_data) {
+            memcpy(flit.data, cpl_data, copy_size);
+        }
+        return flit;
+    }
+
+    static CXLFlit create_snoop_data(uint64_t address, const void* snoop_data,
+                                     uint16_t size, uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x1;  // CXL.cache
+        flit.header.opcode = CXLMemOpcode::SNP_DATA;
+        flit.header.address = address;
+        flit.header.length = size;
+        flit.header.tag = tag;
+
+        size_t copy_size = (size > DATA_SIZE) ? DATA_SIZE : size;
+        if (snoop_data) {
+            memcpy(flit.data, snoop_data, copy_size);
+        }
+        return flit;
+    }
+
+    static CXLFlit create_snoop_invalidate(uint64_t address, uint16_t tag = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = 0x1;  // CXL.cache
+        flit.header.opcode = CXLMemOpcode::SNP_INV;
+        flit.header.address = address;
+        flit.header.tag = tag;
+        return flit;
+    }
+
+    // Generic factory for any opcode
+    static CXLFlit create_custom(uint8_t protocol_id, CXLMemOpcode opcode,
+                                  uint64_t address, const void* payload_data,
+                                  uint16_t size, uint16_t tag = 0,
+                                  uint8_t cache_id = 0, uint8_t flags = 0) {
+        CXLFlit flit;
+        flit.header.protocol_id = protocol_id;
+        flit.header.opcode = opcode;
+        flit.header.address = address;
+        flit.header.length = size;
+        flit.header.tag = tag;
+        flit.header.cache_id = cache_id;
+        flit.header.flags = flags;
+
+        if (payload_data && size > 0) {
+            size_t copy_size = (size > DATA_SIZE) ? DATA_SIZE : size;
+            memcpy(flit.data, payload_data, copy_size);
+        }
+        return flit;
+    }
+
     // Hex dump utilities
 
     std::string to_hex_string(size_t bytes_per_line = 16) const {
