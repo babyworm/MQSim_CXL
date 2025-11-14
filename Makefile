@@ -2,7 +2,7 @@ CC        := g++
 LD        := g++
 CC_FLAGS := -std=c++11 -O3 -g
 
-MODULES   := exec host nvm_chip nvm_chip/flash_memory sim ssd utils
+MODULES   := exec host nvm_chip nvm_chip/flash_memory sim ssd utils cxl
 SRC_DIR   := $(addprefix src/,$(MODULES)) src
 BUILD_DIR := $(addprefix build/,$(MODULES)) build
 
@@ -18,9 +18,13 @@ $1/%.o: %.cpp
 	$(CC) $(CC_FLAGS) $(INCLUDES) -c $$< -o $$@
 endef
 
-.PHONY: all checkdirs clean
+.PHONY: all checkdirs clean TG
 
 all: checkdirs MQSim
+
+TG:
+	@echo "Building CXL Traffic Generators..."
+	$(MAKE) -C cxl_traffic_gen/tests
 
 MQSim: $(OBJ)
 	$(LD) $^ -o $@
@@ -33,5 +37,7 @@ $(BUILD_DIR):
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f MQSim
+	@echo "Cleaning CXL Traffic Generators..."
+	$(MAKE) -C cxl_traffic_gen/tests clean
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call make-goal,$(bdir))))

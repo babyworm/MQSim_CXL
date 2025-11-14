@@ -1,4 +1,5 @@
 #include "CFLRU.h"
+#include <cstdint>
 
 CFLRU::CFLRU(uint64_t cache_size) {
 	if (cache_size >= 4096) {
