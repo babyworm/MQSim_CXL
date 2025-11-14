@@ -1,7 +1,5 @@
 #include"CXL_Config.h"
-
-
-
+#include <cstdint>
 
 
 

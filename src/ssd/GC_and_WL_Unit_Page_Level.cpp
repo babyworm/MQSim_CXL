@@ -5,7 +5,7 @@
 #include "Flash_Block_Manager.h"
 #include "FTL.h"
 #include <algorithm>
-#include <windows.h>
+
 bool GC_on_for_debug = false;
 bool read_subpg_offset_reaches_end = false;
 int total_gc_rw_interval_ER = 0; //Total made read/write transaction in interval between 'select vicitim block' and 'erase block'
@@ -212,7 +212,7 @@ namespace SSD_Components
 			
 			//combine and submit
 			//Step 1. sort and combine
-			stable_sort(waiting_writeback_transaction.begin(), waiting_writeback_transaction.end(), cmp_gc);
+			waiting_writeback_transaction.sort(cmp_gc);
 
 			int align_unit = ALIGN_UNIT_SIZE;
 			bool stop_iterate = false;
@@ -413,7 +413,7 @@ namespace SSD_Components
 		//std::cout << "[before] waiting_submit_transaction: " << waiting_submit_transaction.size() << std::endl;
 
 #if try_combine_GCread
-		stable_sort(waiting_submit_transaction.begin(), waiting_submit_transaction.end(), cmp_gc);
+		waiting_submit_transaction.sort(cmp_gc);
 
 		if (waiting_submit_transaction.size() > 1) {
 			for (std::list<NVM_Transaction*>::const_iterator it = waiting_submit_transaction.begin(); it != waiting_submit_transaction.end(); it++) {

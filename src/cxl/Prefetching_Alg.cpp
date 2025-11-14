@@ -1,4 +1,6 @@
 #include "Prefetching_Alg.h"
+#include <cstdint>
+#include <cmath>
 
 boClass::boClass() {
 	for (auto i = 0; i < maxoffset; i++) offsetscore.push_back(0);

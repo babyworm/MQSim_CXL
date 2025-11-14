@@ -2,7 +2,6 @@
 #include <assert.h>
 #include <stdexcept>
 #include <algorithm>
-#include <windows.h>
 
 #include "Address_Mapping_Unit_Page_Level.h"
 #include "Stats.h"
@@ -574,7 +573,7 @@ namespace SSD_Components
 				//std::cout << "host subpgs W: " << subpgs_host_w_debug << ", ";
 			}
 
-			stable_sort(transactionList.begin(), transactionList.end(), cmp);
+			transactionList.sort(cmp);
 
 			///*
 			int align_unit = ALIGN_UNIT_SIZE;

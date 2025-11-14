@@ -1,5 +1,5 @@
 #include "lrfu_heap.h"
-
+#include <cmath>
 
 lrfuHeap::~lrfuHeap() {
 	while (!Q.empty()) {
